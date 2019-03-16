@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DataTable example</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+	<h1 class="text-center">DataTable</h1>
+	<p class="text-center lead">You can use this package to easily create tables based on any SQL query.</p>
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			{% with table=table1 %}
+			<h2>Example:</h2>	
+			<form method="POST" action="">
+				<div class="form-group">
+					<label>SQL</label>
+					<textarea rows=5 class="form-control" name="sql">{{table.sql}}</textarea>
+				</div>
+
+				<div class="form-group">
+					<label>Headers</label>
+					{% if table.headers %}
+					<input type="text" class="form-control" name="headers" value="{{ ', '.join(table.headers) }}">
+					{% else %}
+					<input type="text" class="col-6 form-control" name="headers">
+					{% endif %}
+					<p class="small text-muted">comma separated</p>
+				</div>
+				<button type="submit" class="btn btn-primary col-12">Submit</button>
+			</form>
+			<br>
+			</div>
+		<div class="col-sm-3"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2"></div>
+			{% include 'datatable.html' %}
+		<div class="col-sm-2"></div>
+	</div>
+	{% endwith %}
+</body>
+</html>
