@@ -20,6 +20,7 @@ class DataTable():
 		self.sql = None
 		self.errors = None
 		self.width = 12
+		self.columns = []
 
 
 	def makeTable(self, sql, params=None, headers=None, css_id=None, width=12):
@@ -31,14 +32,13 @@ class DataTable():
 		print(self.columns)
 		results = self.cur.fetchall()
 		self.headers=headers
-		data = []
+		self.data = []
+		if headers:
+			if len(headers) != len(results[0].keys()):
+				self.headers = None
 		for row in results:
 			line = OrderedDict()
-			if headers:
-				if len(headers) != len(row.keys()):
-					self.headers = None
 			for i, k in enumerate(self.columns):
 				line[k] = str(row.values()[i]).decode('utf-8')
-			data.append(line)
-		self.data = data
+			self.data.append(line)
 
