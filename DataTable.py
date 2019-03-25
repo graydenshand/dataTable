@@ -29,7 +29,6 @@ class DataTable():
 		self.sql = self.cur.query
 		self.width = width
 		self.columns = [desc.name for desc in self.cur.description]
-		print(self.columns)
 		results = self.cur.fetchall()
 		self.headers=headers
 		self.data = []
