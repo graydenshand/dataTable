@@ -5,21 +5,24 @@
 	<title>DataTable example</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
-<body>
+<body style="padding: 1em;">
 	<h1 class="text-center">DataTable</h1>
 	<p class="text-center lead">You can use this package to easily create tables based on any SQL query.</p>
 	<div class="row">
 		<div class="col-sm-3"></div>
 		<div class="col-sm-6">
 			{% with table=table1 %}
-			<h2>Example:</h2>	
+			<h2>Example:</h2>
+			<div class="text-right">
+				<a style="margin-bottom: 1em; color:green;" href="{{ url_for('download_csv', sql=sql)}}">Download As CSV</a>
+			</div>
 			<form method="GET" action="">
 				<div class="form-group">
-					<label>SQL</label>
 					<textarea rows=5 class="form-control" name="sql">{{table.sql}}</textarea>
+					<button type="submit" class="btn btn-primary btn-sm col-12" style="margin-top: 1em;">Submit</button>
 				</div>
 
-				<button type="submit" class="btn btn-primary col-12">Submit</button>
+				
 			</form>
 			<br>
 			</div>
