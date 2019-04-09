@@ -20,10 +20,15 @@ class DataTable():
 		self.errors = None
 		self.width = 12
 		self.columns = []
+		self.error = ""
 
 
 	def makeTable(self, sql, params=None, css_id=None, width=12):
-		self.cur.execute(sql, params)
+		try:
+			self.cur.execute(sql, params)
+		except psycopg2.Error as e:
+			self.error = e.pgerror
+			return self.error
 		self.css_id = css_id
 		self.sql = self.cur.query
 		self.width = width
