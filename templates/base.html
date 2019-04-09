@@ -15,6 +15,8 @@
 			<div class="text-right">
 				{% if table1.error == '' or table1. error is none %}
 				<a style="margin-bottom: 1em; color:green;" href="{{ url_for('download_csv', sql=sql)}}">Download As CSV</a>
+				{% else %}
+				<br>
 				{% endif %}
 			</div>
 			<form method="GET" action="">
