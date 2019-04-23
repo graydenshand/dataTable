@@ -119,7 +119,6 @@ class DataTable():
 							self.foreign_keys_in_table[match[2].lower()] = {'field':value[0], 'table':value[1]}
 						else:
 							self.foreign_keys_in_table[match[0].lower()] = {'field':value[0], 'table':value[1]}
-		print(self.foreign_keys_in_table)
 		return self.foreign_keys_in_table
 
 	def getUsedPrimaryKeys(self):
