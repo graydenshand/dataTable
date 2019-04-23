@@ -13,7 +13,10 @@ app = Flask(__name__)
 
 app.jinja_env.filters['urlencode'] = lambda u: urllib.quote(u)
 
-db_uri = os.environ.get("DATABASE_URI")
+try:	
+	db_uri = os.environ.get("QUERY_TOOL_URL")
+except:
+	db_uri = os.environ.get("DATABASE_URI")
 
 @app.route('/', methods=["GET"])
 def index():
