@@ -65,6 +65,7 @@ class DataTable():
 		'''
 		self.cur.execute(sql)
 		results = self.cur.fetchall()
+		print(results)
 		for key in results:
 			self.foreign_keys[key['table_name']][key['column_name']] = [key['foreign_column_name'],key['foreign_table_name']]
 		#print(self.foreign_keys)
