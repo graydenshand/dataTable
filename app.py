@@ -8,7 +8,10 @@ import urllib
 from DataTable import DataTable
 import csv
 
+
 app = Flask(__name__)
+
+app.jinja_env.filters['urlencode'] = lambda u: urllib.quote(u)
 
 db_uri = os.environ.get("DATABASE_URI")
 

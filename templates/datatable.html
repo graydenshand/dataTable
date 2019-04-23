@@ -25,7 +25,13 @@
 		<tr>
 			<td>{{ loop.index }}</td>
 			{% for k, v in row.items() %}
+				{% if k in table.primary_keys_in_table.keys()  %}
+				<td><a href="/?sql=SELECT+*+FROM+{{ table.primary_keys_in_table[k]['table']}}+where+{{ table.primary_keys_in_table[k]['field']}}+%3D+'{{v | urlencode}}'%3B#">{{ v }}</a></td>
+				{% elif k in table.foreign_keys_in_table.keys() and v is not none and v != 'None' %}
+				<td><a href="/?sql=SELECT+*+FROM+{{ table.foreign_keys_in_table[k]['table']}}+where+{{ table.foreign_keys_in_table[k]['field']}}+%3D+'{{v | urlencode}}'%3B#">{{ v }}</a></td>
+				{% else %}
 				<td>{{ v }}</td>
+				{% endif %}
 			{% endfor %}
 		</tr>
 	{% endfor %}
