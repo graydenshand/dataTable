@@ -65,7 +65,6 @@ class DataTable():
 		'''
 		self.cur.execute(sql)
 		results = self.cur.fetchall()
-		print(results)
 		for key in results:
 			self.foreign_keys[key['table_name']][key['column_name']] = [key['foreign_column_name'],key['foreign_table_name']]
 		#print(self.foreign_keys)
@@ -93,7 +92,7 @@ class DataTable():
 
 	def getUsedTableNames(self):
 		self.table_names_used = set()
-		regex_string = " " + " | ".join(self.table_names) + " "
+		regex_string = " " + "|".join(self.table_names) + " "
 		matches = re.findall(regex_string, self.sql)
 		for match in matches:
 			self.table_names_used.add(match.strip())
@@ -105,7 +104,7 @@ class DataTable():
 		if "*" in self.sql:
 			for table in self.table_names_used:
 				for key, value in self.foreign_keys[table].items():
-					print(table, key, value)
+					#print(table, key, value)
 					self.foreign_keys_in_table[key] = {'field': value[0], 'table': value[1]}
 		else:
 			for table in self.table_names_used:
@@ -149,6 +148,7 @@ class DataTable():
 		self.css_id = css_id
 		self.sql = self.cur.query
 		self.columns = [desc.name for desc in self.cur.description]
+		self.columns
 		self.getUsedForeignKeys()
 		self.getUsedPrimaryKeys()
 		self.width = width
