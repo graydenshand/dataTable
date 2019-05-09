@@ -95,7 +95,7 @@ class DataTable():
 
 	def getUsedTableNames(self):
 		self.table_names_used = set()
-		regex_string = " " + "|".join(self.table_names) + " "
+		regex_string = "|".join(self.table_names)
 		matches = re.findall(regex_string, self.sql)
 		for match in matches:
 			self.table_names_used.add(match.strip())
@@ -155,10 +155,9 @@ class DataTable():
 		match = re.search(regex_string, self.sql, flags=re.I)
 		if match is not None:
 			self.offset = match.group(1)
-		print(self.offset)
 		return self.offset
 
-	def makeJoins(tables, join_type='inner'):
+	def makeJoins(self, tables, join_type='inner'):
 		"""
 		Takes a list of tables and a join type (e.g. inner) as input
 		outputs a string like 'FROM ... LEFT JOIN XXX ON ()...' including all
@@ -171,19 +170,58 @@ class DataTable():
 		
 		"""
 		join_pairs = []
+		join_dict = {}
+		tables_primed_to_join = []
 		for table in tables:
-			print(table)
 			foreign_keys = self.foreign_keys[table]
 			for k, v in foreign_keys.items():
-				print(k, v)
+				#print(k, v)
 				for t in tables:
 					if t == v[1]:
-						join_pairs.append([(table, k), (v[0], v[1])])
-		print(join_pairs)
-		#join_string = 'FROM {}'.format(tables[0])
-		#if len(tables) > 1:
-		#	join_string += ' {} JOIN {} ON ({})'
-		return join_pairs
+						if v[1] not in join_dict.keys():
+							join_dict[v[1]] = [{'primary':v[0], 'f_table':table, 'f_key':k}]
+						else:
+							join_dict[v[1]].append({'primary':v[0], 'f_table':table, 'f_key':k})
+						join_pairs.append([(table, k), (v[1], v[0])])
+						tables_primed_to_join.append(table)
+		print(join_dict)
+		#print(join_pairs)
+		if len(join_dict) > 0:
+			primary_table = (None, 0)
+			for table, refs in join_dict.items():
+				if len(refs) > primary_table[1]:
+					primary_table = (table, len(refs))
+			join_string = 'FROM {} '.format(primary_table[0])
+			joined_tables = [primary_table[0]]
+			skipped_references = []
+			for table, refs in join_dict.items():
+				for reference in refs:
+					print(reference)
+					if reference['f_table'] != primary_table[0]:
+						if reference['f_table'] not in joined_tables:
+							if table not in joined_tables:
+								skipped_references.append(reference)
+							else:
+								join_clause = '\nINNER JOIN {} ON ({})'.format(reference['f_table'], '{}.{} = {}.{}'.format(reference['f_table'], reference['f_key'], table, reference['primary']))
+								join_string += join_clause
+								joined_tables.append(reference['f_table'])		
+						else:
+							this_join_count = joined_tables.count(reference['f_table'])
+							alias = reference['f_table'] + str(this_join_count)
+							join_clause = '\nINNER JOIN {} {} ON ({})'.format(reference['f_table'], alias, '{}.{} = {}.{}'.format(alias, reference['f_key'], table, reference['primary']))
+							join_string += join_clause
+							joined_tables.append(reference['f_table'])
+					else:
+						join_clause = '\nINNER JOIN {} ON ({})'.format(table, '{}.{} = {}.{}'.format(table, reference['primary'], reference['f_table'], reference['f_key']))
+						join_string += join_clause
+						joined_tables.append(table)
+
+		else:
+			join_string = 'FROM {}'.format(tables[0])
+
+		print(join_string)
+
+		return join_string
 
 	def makeTable(self, sql, params=None, css_id=None, width=12):
 		if 'SELECT' != sql.upper()[0:6]:

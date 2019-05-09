@@ -32,25 +32,24 @@ def index():
 	elif request.method == 'POST':
 		x = DataTable(db_uri)
 		requested_tables = request.form.getlist('tables')
-		tables_string = ','.join(requested_tables)
+		#tables_string = ','.join(requested_tables)
 		#MAKE JOINS
 		#tables_string = requested_tables[0]
 		#if len(requested_tables) > 1:
 		#	tables_string += ' INNER JOIN {} ON ({} = {})'.format(new_table, table1.join_key, table2.join_key)
-		#x.makeJoins(requested_tables)
+		tables_string = x.makeJoins(requested_tables)
 		offset = request.form.get('offset')
 		if offset !='':
-			offset_string = " OFFSET {}".format(offset)
+			offset_string = "\nOFFSET {}".format(offset)
 		else:
 			offset_string = ''
 		limit = request.form.get('limit')
 		if limit != '':
-			limit_string = " LIMIT {}".format(limit)
+			limit_string = "\nLIMIT {}".format(limit)
 		else:
 			limit_string = ''
-		sql = 'SELECT * FROM {}{}{};'.format(tables_string, offset_string, limit_string)
+		sql = 'SELECT * {}{}{};'.format(tables_string, offset_string, limit_string)
 		url_sql = urllib.quote(sql)
-		print(json.dumps(requested_tables), url_sql)
 		return redirect(url_for('index', sql=url_sql))
 
 @app.route('/download_csv', methods=['GET'])
