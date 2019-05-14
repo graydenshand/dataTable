@@ -16,9 +16,9 @@
 					<label>Tables</label><br>
 					{% for tn in table1.table_names %}
 					{% if tn in table1.table_names_used %}
-					<input type='checkbox' name='tables' value ='{{tn}}'checked> {{ tn }}<br>
+					<input type='radio' name='tables' value ='{{tn}}'checked> {{ tn }}<br>
 					{% else %}
-					<input type='checkbox' name='tables' value='{{tn}}'> 
+					<input type='radio' name='tables' value='{{tn}}'> 
 					{{ tn }}<br>
 					{% endif %}
 					{% endfor %}
