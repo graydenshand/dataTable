@@ -191,7 +191,7 @@ class DataTable():
 			for table, refs in join_dict.items():
 				if len(refs) > primary_table[1]:
 					primary_table = (table, len(refs))
-			join_string = '\nFROM {} '.format(primary_table[0])
+			join_string = 'FROM {} '.format(primary_table[0])
 			joined_tables = [primary_table[0]]
 			skipped_references = []
 			for table, refs in join_dict.items():
