@@ -224,6 +224,9 @@ class DataTable():
 		return join_string
 
 	def makeTable(self, sql, params=None, css_id=None, width=12):
+		if 'SELECT' != sql.upper()[0:6]:
+			self.error = 'This tool is only to be used for reading from the database \n E.g. "SELECT <columns> FROM <table>;"'
+			return self.error
 		try:
 			self.cur.execute(sql, params)
 		except psycopg2.Error as e:
