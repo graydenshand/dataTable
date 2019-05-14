@@ -21,11 +21,8 @@ class DataTable():
 		self.errors = None
 		self.width = 12
 		self.columns = []
-		self.limit = None
-		self.offset = None
 		self.error = ""
 		self.table_names = []
-		self.table_names_used = set()
 		self.foreign_keys = {}
 		self.primary_keys = {}
 		self.getAllTableNames()
@@ -113,7 +110,7 @@ class DataTable():
 			for table in self.table_names_used:
 				#print(self.foreign_keys[table])
 				for key, value in self.foreign_keys[table].items():
-					#print(table, key, value)
+					print(table, key, value)
 					regex_string="({})( [as|AS]+ ([\w]+))*,".format(key)
 					matches = re.findall(regex_string, self.sql)
 					for match in matches:
@@ -141,49 +138,6 @@ class DataTable():
 						self.primary_keys_in_table[match[0].lower()] = {'field':match[0], 'table':table}
 		return self.primary_keys_in_table
 
-	def getLimit(self):
-		self.limit = None
-		regex_string = "LIMIT ([0-9]+)"
-		match = re.search(regex_string, self.sql, flags=re.I)
-		if match is not None:
-			self.limit = match.group(1)
-		return self.limit
-
-	def getOffset(self):
-		self.offset = None
-		regex_string = "OFFSET ([0-9]+)"
-		match = re.search(regex_string, self.sql, flags=re.I)
-		if match is not None:
-			self.offset = match.group(1)
-		print(self.offset)
-		return self.offset
-
-	def makeJoins(tables, join_type='inner'):
-		"""
-		Takes a list of tables and a join type (e.g. inner) as input
-		outputs a string like 'FROM ... LEFT JOIN XXX ON ()...' including all
-		tables.
-
-		for each table in the list, look at its foreign keys to see if the other
-		tables are listed.
-		
-		create aliases using first 3 letters of the table name
-		
-		"""
-		join_pairs = []
-		for table in tables:
-			print(table)
-			foreign_keys = self.foreign_keys[table]
-			for k, v in foreign_keys.items():
-				print(k, v)
-				for t in tables:
-					if t == v[1]:
-						join_pairs.append([(table, k), (v[0], v[1])])
-		print(join_pairs)
-		#join_string = 'FROM {}'.format(tables[0])
-		#if len(tables) > 1:
-		#	join_string += ' {} JOIN {} ON ({})'
-		return join_pairs
 
 	def makeTable(self, sql, params=None, css_id=None, width=12):
 		if 'SELECT' != sql.upper()[0:6]:
@@ -201,8 +155,6 @@ class DataTable():
 		self.getUsedForeignKeys()
 		self.getUsedPrimaryKeys()
 		self.width = width
-		self.getLimit()
-		self.getOffset()
 		results = self.cur.fetchall()
 		self.data = []
 		for row in results:

@@ -2,76 +2,37 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>DataTable</title>
+	<title>DataTable example</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="static/main.css">
 </head>
-<body>
-	<div class='row' style='height: 100%;'>
-		<div class='col-md-3 d-none d-md-block' id='control-panel'>
-			<h3 class='text-center'>Control Panel</h3>
-			<hr style='width:80%; margin-top:0;'>
-			<form id='control-form' action='' method='POST'>
-				<div class='form-group'>
-					<label>Tables</label><br>
-					{% for tn in table1.table_names %}
-					{% if tn in table1.table_names_used %}
-					<input type='radio' name='tables' value ='{{tn}}'checked> {{ tn }}<br>
-					{% else %}
-					<input type='radio' name='tables' value='{{tn}}'> 
-					{{ tn }}<br>
-					{% endif %}
-					{% endfor %}
-				</div>
+<body style="padding: 1em;">
+	<h1 class="text-center">DataTable</h1>
+	<p class="text-center lead">Use this package to easily create tables based on any SQL query.</p>
+	
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			<div class="text-right">
+				{% if table1.error == '' or table1. error is none %}
+				<a style="margin-bottom: 1em; color:green;" href="{{ url_for('download_csv', sql=sql)}}">Download As CSV</a>
+				{% else %}
 				<br>
-				<div class='row'>
-					<div class='form-group col-6'>
-						<label>Offset</label>
-						<input type='number' name='offset' class='form-control' value='{{table1.offset}}'>
-					</div>
-					<div class='form-group col-6'>
-						<label>Limit</label>
-						<input type='number' name='limit' class='form-control'value='{{table1.limit}}'>
-					</div>
-				</div>
-				<p class='text-small text-muted' style='position:relative;top:-10px'>Leave blank to return all rows</p>
-				<div class='text-center'>
-					<button type='submit' class='btn btn-primary btn-sm col-8'>GENERATE QUERY</button>
-				</div>
-			</form>
-		</div>
-		<div class='col-md-9'>
-			<h1 class="text-center">DataTable</h1>
-			<p class="text-center lead">An admin tool for postgres databases.</p>
-			
-			<div class="row">
-				<div class="col-sm-1"></div>
-				<div class="col-sm-10">
-					<div class="text-right">
-						{% if table1.error == '' or table1. error is none %}
-						<a style="margin-bottom: 1em; color:green;" href="{{ url_for('download_csv', sql=sql)}}">Download as CSV</a>
-						{% else %}
-						<br>
-						{% endif %}
-					</div>
-					<form method="GET" action="">
-						<div class="form-group">
-							<textarea rows=5 class="form-control" name="sql" style='padding:0.5em 0 0.5em 0.8em; margin:0;' placeholder="Enter SQL command">{{sql}}</textarea>
-							<div class='text-center'>
-								<button type="submit" class="btn btn-primary btn-sm col-12" style="margin-top: 1em;">Submit</button>
-							</div>
-						</div>
-
-						
-					</form>
-					<br>
-				</div>
-				<div class="col-sm-1"></div>
+				{% endif %}
 			</div>
-			{% with table=table1 %}
-				{% include 'datatable.html' %}
-			{% endwith %}
+			<form method="GET" action="">
+				<div class="form-group">
+					<textarea rows=5 class="form-control" name="sql" style='padding:0.5em 0 0.5em 0.8em; margin:0;'>{{sql}}</textarea>
+					<button type="submit" class="btn btn-primary btn-sm col-12" style="margin-top: 1em;">Submit</button>
+				</div>
+
+				
+			</form>
+			<br>
 		</div>
+		<div class="col-sm-3"></div>
 	</div>
+	{% with table=table1 %}
+		{% include 'datatable.html' %}
+	{% endwith %}
 </body>
 </html>
