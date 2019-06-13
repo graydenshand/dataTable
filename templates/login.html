@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DataTable example</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+	<div class='col-4 text-center' style='margin: auto; padding-top: 50px'>
+		<form action='' method='POST'>
+			<h2>Sorry, it's locked.</h2>
+			{% if error %}
+			<p style='font-size:12px; color: red;'>Nope.</p>
+			{% endif %}
+			<input type='password' class='form-control' name='passphrase' /><br>
+			<button type='submit' class='btn btn-primary'>Submit</button>
+		</form>
+	</div>
+</body>
+</html>
